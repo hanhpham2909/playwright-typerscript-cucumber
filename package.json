@@ -2,7 +2,7 @@
   "name": "playwright_cucumber_ts",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {"test": "cucumber-js --timeout 20000"},
   "keywords": [],
   "author": "",
   "license": "ISC",
