@@ -1,4 +1,4 @@
-Feature: Verify the title of web
+Feature: Login Functionallity
 
   Background:
     Given I open Automation Excercise

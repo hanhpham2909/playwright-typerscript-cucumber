@@ -5,7 +5,7 @@ import { setDefaultTimeout } from "@cucumber/cucumber";
 
 let page: Page;
 let browser: Browser;
-setDefaultTimeout(20000);
+setDefaultTimeout(20000); // Thời gian chờ mặc định của Cucumber là 500ms, dễ gặp lỗi Error: Timeout of 500ms exceeded.  nếu không tự động set timeout cho kịch bản chạy
 let errorMessage;
 let passwordField;
 
@@ -24,11 +24,13 @@ When(
   "I click the Log In button without filling in any data",
   async function () {
     await page.getByRole("button", { name: "Login" }).click();
+
+    //Cách xử lý toast message trả về thường gặp ở field input:  dùng validationMessage  vì nó kiểm tra thuộc tính của input khi có message trả về
     passwordField = page.locator('input[name="email"]').nth(0);
-    errorMessage = await passwordField.evaluate(
-      (input) => (input as HTMLInputElement).validationMessage
+    errorMessage = await passwordField.evaluate( 
+      (input) => (input as HTMLInputElement).validationMessage //Lỗi gốc: TypeScript không biết chắc passwordField là một HTMLInputElement, nên báo lỗi không có thuộc tính validationMessage. "HTMLInputElement" giúp TypeScript hiểu rằng input là một HTMLInputElement.
     );
-    console.log(errorMessage);
+    console.log(errorMessage); 
   }
 );
 
