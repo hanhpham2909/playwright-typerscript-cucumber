@@ -16,9 +16,11 @@ Feature: Login Functionallity
   @TC03
   Scenario: Verify login with invalid email
     When I click on the SignIn cta in the Header
-    When I log in with the invalid <email>
+    When I log in with the invalid email "<email>"
     Then I should not be able to log in successfully and displayed error message
 
     Examples:
-      | email |
-      | hanh  |
+      | email          |
+      | hanh           |
+      | hanh@          |
+      | hanh@gmail.com |
