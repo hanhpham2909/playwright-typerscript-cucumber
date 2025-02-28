@@ -2,6 +2,7 @@ import { Given, When, Then } from "@cucumber/cucumber";
 import { Page, Browser, chromium } from "playwright";
 import { expect } from "@playwright/test";
 import { setDefaultTimeout } from "@cucumber/cucumber";
+import { Before, After } from "@cucumber/cucumber";
 
 let page: Page;
 let browser: Browser;
@@ -9,6 +10,16 @@ setDefaultTimeout(20000); // Thời gian chờ mặc định của Cucumber là 
 let emailField;
 let passwordField;
 let inputEMail: string;
+
+Before(async function () {
+  browser = await chromium.launch({ headless: true });
+  const context = await browser.newContext();
+  page = await context.newPage();
+});
+
+After(async function () {
+  await browser.close();
+});
 
 Given("I open Automation Excercise", async function () {
   browser = await chromium.launch({ headless: true });
@@ -53,13 +64,13 @@ Then(
     console.log(this.errorMessage);
     if (inputEMail === "") {
       expect(this.errorMessage).toBe("Please fill out this field.");
-    } 
-    else if (!inputEMail.includes("@")) { //Dấu ! (phủ định) đảo ngược giá trị true thành false và ngược lại. Nghĩa là nghĩa là "inputType không chứa '@'"
+    } else if (!inputEMail.includes("@")) {
+      //Dấu ! (phủ định) đảo ngược giá trị true thành false và ngược lại. Nghĩa là nghĩa là "inputType không chứa '@'"
       expect(this.errorMessage).toBe(
         `Please include an '@' in the email address. '${inputEMail}' is missing an '@'.`
       );
-    } 
-    else if (inputEMail.endsWith("@")) { // Kiểm tra ký tự cuối cùng của data input
+    } else if (inputEMail.endsWith("@")) {
+      // Kiểm tra ký tự cuối cùng của data input
       expect(this.errorMessage).toBe(
         `Please enter a part following '@'. '${inputEMail}' is incomplete.`
       );
@@ -71,7 +82,6 @@ Then(
       console.log(this.errorMessage);
       expect(this.errorMessage).toBe("Please fill out this field.");
     }
-    await browser.close();
   }
 );
 
