@@ -24,7 +24,7 @@ After(async function () {
 });
 
 Given("I open Automation Excercise", async function () {
-  browser = await chromium.launch({ headless: true });
+  browser = await chromium.launch({ headless: false });
   const context = await browser.newContext();
   page = await context.newPage();
   await page.goto("https://automationexercise.com");

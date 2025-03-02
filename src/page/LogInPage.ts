@@ -1,0 +1,49 @@
+import { expect, type Locator, type Page } from "@playwright/test";
+
+export class LogInPage {
+  readonly page: Page;
+  readonly signInUpCTA: Locator;
+  readonly nameInputField: Locator;
+  readonly emailSignUpField: Locator;
+  readonly signUpButton: Locator;
+  readonly errorMess: Locator;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.signInUpCTA = page.locator('a[href="/login"]');
+    this.nameInputField = page.locator("//input[@data-qa='signup-name']");
+    this.emailSignUpField = page.locator("(//input[@name='email'])[2]");
+    this.signUpButton = page.locator("(//button[@class='btn btn-default'])[2]");
+    this.errorMess = page.locator(
+      "//p[normalize-space(text())='Your email or password is incorrect!']"
+    );
+  }
+
+  async goto() {
+    await this.page.goto("https://automationexercise.com");
+    await this.signInUpCTA.click();
+    await expect(this.page).toHaveURL("https://automationexercise.com/login");
+  }
+
+  async verifyUIElementsVisible() {
+    // await expect(this.nameInputField).toBeVisible();
+    // await expect(this.emailSignUpField).toBeVisible();
+    // await expect(this.signUpButton).toBeVisible();
+    // await expect(this.errorMess).toBeVisible();
+
+    const fields = [
+      { element: this.nameInputField, name: "Name Input Field" },
+      { element: this.emailSignUpField, name: "Email and Address Input Field" },
+      { element: this.signUpButton, name: "Signun Button " },
+      { element: this.errorMess, name: "Error mess " },
+    ];
+
+    for (const field of fields) {
+      if (await field.element.isVisible()) {
+        await expect(field.element).toBeVisible();
+      } else {
+        console.log("Missing" + field.name);
+      }
+    }
+  }
+}
