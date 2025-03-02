@@ -21,6 +21,8 @@ Feature: Login Functionallity
 
     Examples:
       | email          |
-      | hanh           |
+      | hanh           | 
       | hanh@          |
-      | hanh@gmail.com |
+      | hanh@gmail.com | # user does not input password
+
+      

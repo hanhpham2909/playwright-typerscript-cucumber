@@ -3,6 +3,7 @@ import { Page, Browser, chromium } from "playwright";
 import { expect } from "@playwright/test";
 import { setDefaultTimeout } from "@cucumber/cucumber";
 import { Before, After } from "@cucumber/cucumber";
+import { getValidationMessage } from "../../helpers/validationField/validationHelper";
 
 let page: Page;
 let browser: Browser;
@@ -11,6 +12,7 @@ let emailField;
 let passwordField;
 let inputEMail: string;
 
+// Optimize browser setup
 Before(async function () {
   browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
@@ -58,9 +60,7 @@ Then(
   async function () {
     //Cách xử lý toast message trả về thường gặp ở field input, không thể xác định locator trên DOM:  dùng validationMessage  vì nó kiểm tra thuộc tính của input khi có message trả về
     emailField = page.locator('input[name="email"]').nth(0);
-    this.errorMessage = await emailField.evaluate(
-      (input) => (input as HTMLInputElement).validationMessage //Lỗi gốc: TypeScript không biết chắc passwordField là một HTMLInputElement, nên báo lỗi không có thuộc tính validationMessage. "HTMLInputElement" giúp TypeScript hiểu rằng input là một HTMLInputElement.
-    );
+    this.errorMessage = await getValidationMessage(emailField);
     console.log(this.errorMessage);
     if (inputEMail === "") {
       expect(this.errorMessage).toBe("Please fill out this field.");
@@ -76,15 +76,9 @@ Then(
       );
     } else {
       passwordField = page.locator("//input[@data-qa='login-password']");
-      this.errorMessage = await passwordField.evaluate(
-        (input) => (input as HTMLInputElement).validationMessage
-      );
+      this.errorMessage = await getValidationMessage(passwordField);
       console.log(this.errorMessage);
       expect(this.errorMessage).toBe("Please fill out this field.");
     }
   }
 );
-
-// Then("I should not be able to log in successfully", async function () {
-//   await expect(page).
-// });
