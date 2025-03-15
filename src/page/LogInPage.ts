@@ -7,6 +7,10 @@ export class LogInPage {
   readonly emailSignUpField: Locator;
   readonly signUpButton: Locator;
   readonly errorMess: Locator;
+  readonly titleMr : Locator;
+  readonly titleMrs : Locator;
+  readonly nameAccountInfo : Locator;
+  readonly emailAccountInfo : Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -17,6 +21,10 @@ export class LogInPage {
     this.errorMess = page.locator(
       "//p[normalize-space(text())='Your email or password is incorrect!']"
     );
+    this.titleMr = page.locator('#id_gender1') ;
+    this.titleMrs = page.locator('#id_gender2') ;
+    this.nameAccountInfo = page.locator('#name');
+    this.emailAccountInfo = page.locator('#email');
   }
 
   async goto() {
@@ -26,11 +34,6 @@ export class LogInPage {
   }
 
   async verifyUIElementsVisible() {
-    // await expect(this.nameInputField).toBeVisible();
-    // await expect(this.emailSignUpField).toBeVisible();
-    // await expect(this.signUpButton).toBeVisible();
-    // await expect(this.errorMess).toBeVisible();
-
     const fields = [
       { element: this.nameInputField, name: "Name Input Field" },
       { element: this.emailSignUpField, name: "Email and Address Input Field" },
@@ -46,4 +49,19 @@ export class LogInPage {
       }
     }
   }
+  async newUserSignUp(name: string, email: string) {
+    await this.nameInputField.fill(name);
+    await this.emailSignUpField.fill(email);
+    await this.signUpButton.click();
+    await expect(this.page).toHaveURL("https://automationexercise.com/signup");
+    await expect(this.nameAccountInfo).toHaveValue(`${name}`);
+    await expect(this.emailAccountInfo).toHaveValue(`${email}`);
+    // if (gender = "male"){
+    //     this.titleMr.click();
+    // } else (gender = "female"){
+    //     this.titleMrs.click();
+    // }  
+
+  }
+
 }
