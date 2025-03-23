@@ -1,26 +1,44 @@
 import { Given, When, Then } from "@cucumber/cucumber";
+import { Page } from "@playwright/test";
 import { setDefaultTimeout } from "@cucumber/cucumber";
-import { LogInPage } from "../../../page/LogInPage";
+import { SignUpPage } from "../../../page/SignUpPage";
 import { page } from "../../helpers/hooks";
 
 setDefaultTimeout(20000);
-let logInPage: LogInPage;
+let signUpPage: SignUpPage;
 
 Given("I open the sign-up page", async function () {
-  logInPage = new LogInPage(page);
-  await logInPage.goto();
+  signUpPage = new SignUpPage(page);
+  await signUpPage.gotoSignUpPage();
 });
 
-When("I submit in the sign-up form with valid name {string} & email {string}", async function(name:string,email:string){
-await logInPage.newUserSignUp(name,email);
-});
-
-
-Then(
-  "I should see the input fields for Name, Email Address and the Signup button",
-  async function () {
-    await logInPage.verifyUIElementsVisible();
+When(
+  "I submit in the sign-up form with valid name {string} and email {string}",
+  async function (name: string, email: string) {
+    await signUpPage.signUp(name, email);
   }
 );
 
+When("I fill my information:", async function (dataTable) { // Đây là dữ liệu dạng bảng (dataTable) được truyền từ file .feature
+  const data = dataTable.hashes()[0]; //Chuyển đổi dữ liệu từ bảng (dataTable) thành một object key-value trong JavaScript.
+  await signUpPage.fillSignUpForm({
+    gender: data.gender,
+    password: data.password,
+    firstName: data.firstName,
+    lastName: data.lastName,
+    address: data.address,
+    country: data.country,
+    state: data.state,
+    city: data.city,
+    zipCode: data.zipCode,
+    phone: data.phone,
+  });
 
+});
+
+Then(
+  "Then I successfully create an account",
+  async function () {
+    await signUpPage.verifyCreateAccountSuccess();
+  }
+);

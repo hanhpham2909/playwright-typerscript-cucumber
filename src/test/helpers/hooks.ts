@@ -30,7 +30,7 @@ After(async function (scenario) {
   }
 
   console.log("🛑 Closing browser...");
-  await browser.close();
+  
 });
 
 export { page };
